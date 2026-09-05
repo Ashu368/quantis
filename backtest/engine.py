@@ -55,3 +55,55 @@ def train_test_split(prices: pd.DataFrame, split_date: str) -> tuple[pd.DataFram
     train = prices[prices.index < split_date]
     test = prices[prices.index >= split_date]
     return train, test
+
+
+def walk_forward_backtest(
+    prices: pd.DataFrame,
+    strategy,
+    train_window: int,
+    test_window: int,
+    **backtest_kwargs,
+) -> BacktestResult:
+    """Roll a fixed-size train window forward, refit, and backtest the next
+    `test_window` bars out-of-sample. Concatenates all out-of-sample segments
+    into one continuous equity curve.
+
+    This is what makes a strategy's reported performance honest for anything
+    that needs periodic refitting (e.g. an ML classifier) — no single lucky
+    train/test split can inflate the result, since every segment is truly
+    unseen by the model at fit time.
+    """
+    all_returns = []
+    all_positions = []
+
+    start = 0
+    while start + train_window + test_window <= len(prices):
+        train = prices.iloc[start : start + train_window]
+        test = prices.iloc[start + train_window : start + train_window + test_window]
+
+        strategy.fit(train)
+        signals = strategy.generate_signals(test)
+
+        segment_result = run_backtest(test, signals, **backtest_kwargs)
+        all_returns.append(segment_result.returns)
+        all_positions.append(segment_result.positions)
+
+        start += test_window
+
+    if not all_returns:
+        raise ValueError("Not enough data for even one walk-forward window")
+
+    combined_returns = pd.concat(all_returns)
+    combined_positions = pd.concat(all_positions)
+
+    initial_capital = backtest_kwargs.get("initial_capital", 100_000.0)
+    equity_curve = initial_capital * (1 + combined_returns).cumprod()
+
+    summary = metrics.summarize(equity_curve, combined_returns)
+
+    return BacktestResult(
+        equity_curve=equity_curve,
+        returns=combined_returns,
+        positions=combined_positions,
+        metrics=summary,
+    )

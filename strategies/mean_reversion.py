@@ -1,6 +1,7 @@
 """Z-score mean reversion strategy: fade extreme deviations from a rolling mean."""
 import pandas as pd
 
+from data.features import zscore
 from strategies.base import Strategy
 
 
@@ -12,9 +13,7 @@ class MeanReversionStrategy(Strategy):
 
     def generate_signals(self, prices: pd.DataFrame) -> pd.Series:
         close = prices["close"]
-        rolling_mean = close.rolling(self.lookback).mean()
-        rolling_std = close.rolling(self.lookback).std()
-        z_score = (close - rolling_mean) / rolling_std
+        z_score = zscore(close, self.lookback)
 
         position = pd.Series(float("nan"), index=close.index)
         position[z_score < -self.entry_z] = 1.0
