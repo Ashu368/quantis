@@ -1,5 +1,9 @@
 # quantis
 
+[![CI](https://github.com/Ashu368/quantis/actions/workflows/ci.yml/badge.svg)](https://github.com/Ashu368/quantis/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+
 A backtesting and statistical-edge-detection engine for algorithmic trading strategies.
 
 ## What it does
@@ -46,7 +50,7 @@ Two things worth noting:
 
 ## Status
 
-🚧 Active development — backtesting engine, walk-forward validation, and significance testing are done. Next: order book/microstructure analysis, CI, packaging.
+🚧 Active development — backtesting engine, ML strategy, walk-forward validation, significance testing, and CI are done. Next: order book/microstructure analysis.
 
 ## Setup
 

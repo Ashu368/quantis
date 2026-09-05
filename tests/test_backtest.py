@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from backtest.engine import run_backtest, train_test_split
 from backtest import metrics
+from backtest.engine import run_backtest, train_test_split
 
 
 def _fake_prices(n=100, seed=0):

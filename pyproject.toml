@@ -1,0 +1,29 @@
+[project]
+name = "quantis"
+version = "0.1.0"
+description = "Backtesting and statistical edge-detection engine for algorithmic trading strategies"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    "scipy>=1.12",
+    "yfinance>=0.2.40",
+    "scikit-learn>=1.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+ignore = ["E501"]
+
+[tool.setuptools.packages.find]
+include = ["backtest*", "strategies*", "data*", "analysis*"]
