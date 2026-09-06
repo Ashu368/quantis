@@ -37,6 +37,8 @@ quantis/
 
 ## Findings so far (honest, not cherry-picked)
 
+![Walk-forward equity curves](assets/equity_curves.png)
+
 Running both strategies on SPY (2015-2023) with walk-forward validation (252-day train / 63-day test windows, refit every window):
 
 | Strategy | OOS Sharpe | p-value (mean return != 0) | Verdict |
