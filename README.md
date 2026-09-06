@@ -48,9 +48,19 @@ Two things worth noting:
 - A naive single train/test split on the ML classifier showed an in-sample Sharpe of **7.0** — an obviously overfit, meaningless number. Walk-forward validation exposes this: the model doesn't generalize, and that failure is itself statistically significant (p=0.0045), not just noisy variance.
 - This is the whole point of the project: report what the statistics actually say, not the most flattering split. Reproduce with `--walk-forward` yourself (see Usage below).
 
+## Microstructure analysis
+
+`analysis/` demonstrates order-flow-imbalance analysis (Cont, Kukanov & Stoikov, 2014) — regressing next-tick returns on order flow imbalance. **Real tick-level order book data is paywalled**, so this runs on a synthetic order book with a documented, injected effect (see `analysis/orderbook_sim.py`) rather than claiming a discovery on real markets we don't have data for. The point is the methodology, which applies unchanged to a real LOBSTER-format book:
+
+```bash
+python -m analysis.run_microstructure_analysis
+```
+
+A correctly-calibrated microstructure effect looks like this: R² ≈ 0.002 (tiny — as expected, these effects explain almost none of the variance) but p < 0.001 (highly significant given enough ticks). A null control dataset with no injected effect correctly shows p ≈ 0.5. Getting R² anywhere near 1.0 here would be a red flag that the "signal" is an artifact, not microstructure noise.
+
 ## Status
 
-🚧 Active development — backtesting engine, ML strategy, walk-forward validation, significance testing, and CI are done. Next: order book/microstructure analysis.
+🚧 Active development — backtesting engine, ML strategy, walk-forward validation, significance testing, CI, and microstructure analysis are done.
 
 ## Setup
 
