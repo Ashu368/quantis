@@ -48,6 +48,14 @@ Two things worth noting:
 - A naive single train/test split on the ML classifier showed an in-sample Sharpe of **7.0** — an obviously overfit, meaningless number. Walk-forward validation exposes this: the model doesn't generalize, and that failure is itself statistically significant (p=0.0045), not just noisy variance.
 - This is the whole point of the project: report what the statistics actually say, not the most flattering split. Reproduce with `--walk-forward` yourself (see Usage below).
 
+## Dashboard
+
+An interactive Streamlit dashboard to configure a strategy, pick walk-forward or single-split validation, and see the equity curve plus statistical significance live:
+
+```bash
+streamlit run api/dashboard.py
+```
+
 ## Microstructure analysis
 
 `analysis/` demonstrates order-flow-imbalance analysis (Cont, Kukanov & Stoikov, 2014) — regressing next-tick returns on order flow imbalance. **Real tick-level order book data is paywalled**, so this runs on a synthetic order book with a documented, injected effect (see `analysis/orderbook_sim.py`) rather than claiming a discovery on real markets we don't have data for. The point is the methodology, which applies unchanged to a real LOBSTER-format book:
